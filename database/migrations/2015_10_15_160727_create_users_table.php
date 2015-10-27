@@ -22,11 +22,15 @@ class CreateUsersTable extends Migration
 			$table->string('firstname');
 			$table->string('lastname');
 			$table->string('email')->unique();
+			$table->string('profile_photo');
+			$table->string('cover_photo');
+			$table->string('followers');
+			$table->string('followed');
+			$table->string('bio');
 			$table->boolean('remember_token');
 			$table->string('password');
 		});
-
-    }
+	}
 
     /**
      * Reverse the migrations.
@@ -34,9 +38,9 @@ class CreateUsersTable extends Migration
      * @return void
      */
     public function down()
-    {        
+    {
         // Drop table
         
-		Schema::drop('users');
-    }
+		Schema::drop('users');    
+	}
 }

@@ -48,7 +48,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="intro-message">
-                        <h1>LotusReel</h1>
+                        <h1 style="font-family: 'Playball', cursive;">LotusReel</h1>
                         <h3>The online intermediary between artists and their audience</h3>
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">

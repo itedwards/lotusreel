@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('content')
-	<form action="/new-post-form" method="post">
+	<form action="/new-post-form" method="post" enctype="multipart/form-data">
 	  <div class="form-group">
 	    <label for="title">Title</label>
 	    <input type="text" class="form-control" id="title" placeholder="Give Post a Title" name="title">

@@ -14,8 +14,10 @@
 
 		Password:
 		{{ Form::password('password') }}<br><br>
+		
+		<input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
 
 		{{ Form::submit('Submit') }}
-
+		
 	{{ Form::close() }}
 @stop	

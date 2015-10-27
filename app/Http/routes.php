@@ -11,6 +11,8 @@
 |
 */
 
+use Illuminate\Http\Request;
+
 Route::get('/', function()
 {
 	if($remember = true && Auth::check())
@@ -34,7 +36,9 @@ Route::post('/', function()
 	}
 	else
 	{
-		return Redirect::to('/');
+		$user = Auth::user();
+		return Redirect::to('/')
+			->with('user', $user);
 	}
 	
 });
@@ -72,18 +76,94 @@ Route::post('sign-up', function()
 	}
 	else
 	{
-		$user = new \App\User;
-
-		$user->firstname = Input::get('firstname');
-		$user->lastname = Input::get('lastname');
-		$user->email = Input::get('email');
-		$user->password = Hash::make(Input::get('password'));
-
-		$user->save();
-		Auth::login($user);
-
-		return Redirect::to('/home')
-			->with('user', $user);
+		$profile = $_FILES['profile_photo'];
+		$cover = $_FILES['cover_photo'];
+		
+		if(isset($profile) && isset($cover))
+		{
+			$user = new \App\User;	
+			/*
+			|--------------------------------------------------------------------------
+			| Add Profile Photo
+			|--------------------------------------------------------------------------
+			*/
+			$profile_name = $_FILES['profile_photo']['name'];
+			$profile_tmp_name = $_FILES['profile_photo']['tmp_name'];
+		
+			$profile_extension = explode('.', $profile_name);
+			$profile_extension = strtolower(end($profile_extension));
+		
+			$profile_key = md5(uniqid());
+			$profile_tmp_file_name = "{$profile_key}.{$profile_extension}";
+			$profile_tmp_file_path = "../files/{$profile_tmp_file_name}";
+			
+			move_uploaded_file($profile_tmp_name, $profile_tmp_file_path);
+			
+			$s3 = App::make('aws')->createClient('s3');
+			$result = $s3->putObject(array(
+		    	'Bucket'     => 'lotusreelmedia',
+				'Key'        =>  "uploads/{$profile_name}",
+				'SourceFile' =>  $profile_tmp_file_path,
+				'ACL' => 'public-read'
+			));
+			
+					
+			$user->profile_photo = $s3->getObjectUrl('lotusreelmedia', "uploads/{$profile_name}");
+			
+			/*
+			|--------------------------------------------------------------------------
+			| Add Cover Photo
+			|--------------------------------------------------------------------------
+			*/
+			
+			$cover_name = $_FILES['cover_photo']['name'];
+			$cover_tmp_name = $_FILES['cover_photo']['tmp_name'];
+		
+			$cover_extension = explode('.', $cover_name);
+			$cover_extension = strtolower(end($cover_extension));
+		
+			$cover_key = md5(uniqid());
+			$cover_tmp_file_name = "{$cover_key}.{$cover_extension}";
+			$cover_tmp_file_path = "../files/{$cover_tmp_file_name}";
+			
+			move_uploaded_file($cover_tmp_name, $cover_tmp_file_path);
+			
+			$s3 = App::make('aws')->createClient('s3');
+			$result = $s3->putObject(array(
+		    	'Bucket'     => 'lotusreelmedia',
+				'Key'        =>  "uploads/{$cover_name}",
+				'SourceFile' =>  $profile_tmp_file_path,
+				'ACL' => 'public-read'
+			));
+			
+					
+			$user->cover_photo = $s3->getObjectUrl('lotusreelmedia', "uploads/{$cover_name}");
+		
+			/*
+			|--------------------------------------------------------------------------
+			| Add Additional Info
+			|--------------------------------------------------------------------------
+			*/
+			
+			$user->firstname = Input::get('firstname');
+			$user->lastname = Input::get('lastname');
+			$user->bio = Input::get('bio');
+			$user->followers = "";
+			$user->followed = "";
+			$user->email = Input::get('email');
+			$user->password = Hash::make(Input::get('password'));
+			$user->save();
+			
+			
+			Auth::login($user);
+	
+			return Redirect::to('/home')
+				->with('user', $user);
+		}
+		else
+		{
+			return Redirect::to('/sign-up');
+		}
 	}
 	
 });
@@ -96,13 +176,27 @@ Route::get('/home', function()
 	}
 	else
 	{
-		return Redirect::to('/index');
+		$user = Auth::user();
+		return Redirect::to('/')
+			->with('user', $user);
 	}
+});
+
+Route::get('/profile', function(){
+	Return View::make('profile')
+		->with('id', $id);
 });
 
 Route::get('/new-post-form', function()
 {
-	Return View::make('new_post_form');	
+	if(Auth::check())
+	{
+		Return View::make('new_post_form');
+	}
+	else
+	{
+		return Redirect::to('/');
+	}
 });
 
 Route::post('/new-post-form', function()
@@ -110,16 +204,47 @@ Route::post('/new-post-form', function()
 
 	$user = Auth::user();
 	
-	$post = new Post;
+	$file = $_FILES['file'];
+		
+	if(isset($file))
+	{		
+		$name = $_FILES['file']['name'];
+		$tmp_name = $_FILES['file']['tmp_name'];
+		
+		$extension = explode('.', $name);
+		$extension = strtolower(end($extension));
+		
+		$key = md5(uniqid());
+		$tmp_file_name = "{$key}.{$extension}";
+		$tmp_file_path = "../files/{$tmp_file_name}";
+		
+		move_uploaded_file($tmp_name, $tmp_file_path);
 	
-	$post->title = Input::get('title');
-	$post->description = Input::get('description');
-	$post->file = Input::get('file');
-	$post->user_id = $user->id;
-	
-	$post->save();
-	
-	return View::make('home');
+		$post = new \App\Post;
+		
+		$post->title = Input::get('title');
+		$post->description = Input::get('description');
+		
+		$s3 = App::make('aws')->createClient('s3');
+		$result = $s3->putObject(array(
+	    	'Bucket'     => 'lotusreelmedia',
+			'Key'        =>  "uploads/{$name}",
+			'SourceFile' =>  $tmp_file_path,
+			'ACL' => 'public-read'
+		));
+		
+				
+		$post->file = $s3->getObjectUrl('lotusreelmedia', "uploads/{$name}");
+		$post->user_id = $user->id;
+		
+		$post->save();
+		
+		return View::make('home');
+	}
+	else
+	{
+		return Redirect::to('/new-post-form');
+	}
 
 });
 
