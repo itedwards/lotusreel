@@ -18,6 +18,7 @@ Route::get('/', function()
 	if($remember = true && Auth::check())
 	{
 		return Redirect::to('/home');
+		
 	}
 	else
 	{
@@ -172,7 +173,10 @@ Route::get('/home', function()
 {
 	if(Auth::check())
 	{
-		return View::make('home');	
+		$user = Auth::id();
+		$posts_query = DB::table('posts')->where('user_id', '=', $user)->get();
+		return View::make('home')
+			->with('posts_query', $posts_query);
 	}
 	else
 	{
@@ -182,8 +186,8 @@ Route::get('/home', function()
 	}
 });
 
-Route::get('/profile', function(){
-	Return View::make('profile')
+Route::get('/profile/{id}', function($id){
+	return View::make('profile')
 		->with('id', $id);
 });
 
@@ -239,7 +243,7 @@ Route::post('/new-post-form', function()
 		
 		$post->save();
 		
-		return View::make('home');
+		return Redirect::to('/home');
 	}
 	else
 	{

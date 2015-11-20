@@ -4,6 +4,10 @@
 	Sign Up | LotusReel
 @stop
 
+@section('nav')
+
+@stop
+
 @section('content')
 	<h1>Sign Up</h1>
 	@foreach($errors->all() as $message) 

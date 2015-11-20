@@ -1,6 +1,15 @@
 @extends('master')
 
-
+@section('head')
+<script type="text/javascript">
+$(document).ready(function(){ 
+    $("#myTab a").click(function(e){
+    	e.preventDefault();
+    	$(this).tab('show');
+    });
+});
+</script>
+@stop
 
 @section('content')
 <?php
@@ -28,7 +37,7 @@
             <a href="index.html">Home</a>
           </li>
           <li>
-            <a href="profile/index.html">Profile</a>
+            <a href="profile/<?php echo Auth::id(); ?>">Profile</a>
           </li>
           <li>
             <a data-toggle="modal" href="#msgModal">Messages</a>
@@ -59,17 +68,17 @@
 
         <ul class="nav navbar-nav hidden-sm hidden-md hidden-lg">
           <li><a href="index.html">Home</a></li>
-          <li><a href="profile/index.html">Profile</a></li>
+          <li><a href="profile/<?php echo Auth::id(); ?>">Profile</a></li>
           <li><a href="notifications/index.html">Notifications</a></li>
           <li><a data-toggle="modal" href="#msgModal">Messages</a></li>
           <li><a href="docs/index.html">Docs</a></li>
           <li><a href="#" data-action="growl">Growl</a></li>
-          <li><a href="login/index.html">Logout</a></li>
+          <li><a href="/logout">Logout</a></li>
         </ul>
 
         <ul class="nav navbar-nav hidden">
           <li><a href="#" data-action="growl">Growl</a></li>
-          <li><a href="login/index.html">Logout</a></li>
+          <li><a href="/logout">Logout</a></li>
         </ul>
       </div>
   </div>
@@ -77,8 +86,88 @@
 
 
 <div class="container p-t-md">
-  <div class="row">
-    <div class="col-md-3">
+	
+
+    <div class="col-md-8">
+    	<div class="panel-group" id="accordion">
+	        <div class="panel panel-default">
+	        	<a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+	           		<div class="panel-heading">
+	                	<h4 class="panel-title">
+	                    	<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> New Post
+	                    	<span class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
+						</h4>
+					</div>
+	        	</a>
+            	<div id="collapseTwo" class="panel-collapse collapse">
+                	<div class="panel-body">
+						<form action="/new-post-form" method="post" enctype="multipart/form-data">
+							<div class="form-group">
+								<label for="title">Title</label>
+								<input type="text" class="form-control" id="title" placeholder="Give Post a Title" name="title">
+							</div>
+							<div class="form-group">
+								<label for="description">Description</label>
+								<textarea class="form-control" rows="3" placeholder="Give Post a Description" name="description"></textarea>
+							</div>
+							<div class="form-group">
+								<label for="InputFile">Your Creation</label>
+								<input type="file" id="InputFile" name="file">
+								<p class="help-block">Make it anything.</p>
+							</div>
+							<button type="submit" class="btn btn-default">Submit</button>
+						</form>
+					</div>
+				</div>
+			</div>
+    	</div>
+
+		<ul class="list-group media-list media-list-stream">
+			<?php
+				$new_array = array();
+				for($i = 0; $i < sizeof(json_decode(json_encode($posts_query), true)); $i++){
+						$new_array[$i] = json_decode(json_encode($posts_query[$i]), true);
+					}
+			
+					foreach($new_array as $post){
+  					$user_query = DB::table('users')->where('id', '=', $post['user_id'])->get();
+  					$post_user = json_decode(json_encode($user_query[0]), true);
+			?>
+			<li class="media list-group-item p-a">
+  				<a class="media-left" href="#">
+	  				<img class="media-object img-circle" src="<? echo $post_user['profile_photo']; ?>">
+	  			</a>
+	  			<div class="media-body">
+		  			<div class="media-heading">
+			  			<small class="pull-right text-muted">4 min</small>
+			  			<h5><?php echo $post_user['firstname']; echo " ".$post_user['lastname']; ?></h5>
+			  		</div>
+	
+			  			<p>
+				  			<?php echo $post['description']; ?>	            
+				  		</p>
+				  	<div class="media-body-inline-grid" data-grid="images">
+					  	<div style="display: none">
+						  	<img data-action="zoom" data-width="1050" data-height="700" src="<? echo $post['file'] ?>">
+						</div>
+					</div>
+					<button class="btn btn-default-outline" type="button">
+  <span class="icon icon-thumbs-up"></span>
+  Like
+</button>
+	  			</div>
+			</li>
+			<?php
+				}
+			?>
+		</ul>		
+	</div>
+    <div class="col-md-4">
+      <div class="alert alert-warning alert-dismissible hidden-xs" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <a class="alert-link" href="profile/index.html">Visit your profile!</a> Check your self, you aren't looking too good.
+      </div>
+
       <div class="panel panel-default panel-profile m-b-md">
         <div class="panel-heading" style="background-image: url(<?php echo $user['cover_photo'] ?>);"></div>
         <div class="panel-body text-center">
@@ -102,71 +191,6 @@
               </a>
             </li>
           </ul>
-        </div>
-      </div>
-
-       <div class="panel panel-default visible-md-block visible-lg-block">
-        <div class="panel-body">
-          <h5 class="m-t-0">Photos <small>· <a href="#">Edit</a></small></h5>
-          <div data-grid="images" data-target-height="150">
-            <div>
-              <img data-width="640" data-height="640" data-action="zoom" src="assets/img/instagram_5.jpg">
-            </div>
-
-            <div>
-              <img data-width="640" data-height="640" data-action="zoom" src="assets/img/instagram_6.jpg">
-            </div>
-
-            <div>
-              <img data-width="640" data-height="640" data-action="zoom" src="assets/img/instagram_7.jpg">
-            </div>
-
-            <div>
-              <img data-width="640" data-height="640" data-action="zoom" src="assets/img/instagram_8.jpg">
-            </div>
-
-            <div>
-              <img data-width="640" data-height="640" data-action="zoom" src="assets/img/instagram_9.jpg">
-            </div>
-
-            <div>
-              <img data-width="640" data-height="640" data-action="zoom" src="assets/img/instagram_10.jpg">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-6">
-      <ul class="list-group media-list media-list-stream">
-
-        <li class="media list-group-item p-a">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Message">
-            <div class="input-group-btn">
-              <button type="button" class="btn btn-default">
-                <span class="icon icon-camera"></span>
-              </button>
-            </div>
-          </div>
-        </li>
-      </ul>
-		<h2>No recent posts</h2>
-    </div>
-    <div class="col-md-3">
-      <div class="alert alert-warning alert-dismissible hidden-xs" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <a class="alert-link" href="profile/index.html">Visit your profile!</a> Check your self, you aren't looking too good.
-      </div>
-
-      <div class="panel panel-default m-b-md hidden-xs">
-        <div class="panel-body">
-          <h5 class="m-t-0">Sponsored</h5>
-          <div data-grid="images" data-target-height="150">
-            <img class="media-object" data-width="640" data-height="640" data-action="zoom" src="assets/img/instagram_2.jpg">
-          </div>
-          <p><strong>It might be time to visit Iceland.</strong> Iceland is so chill, and everything looks cool here. Also, we heard the people are pretty nice. What are you waiting for?</p>
-          <button class="btn btn-primary-outline btn-sm">Buy a ticket</button>
         </div>
       </div>
 
