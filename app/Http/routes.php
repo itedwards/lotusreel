@@ -243,6 +243,8 @@ Route::post('/new-post-form', function()
 		
 		$post->save();
 		
+		unlink("../files/{$tmp_file_name}");
+		
 		return Redirect::to('/home');
 	}
 	else
