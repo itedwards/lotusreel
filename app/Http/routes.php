@@ -229,8 +229,8 @@ Route::post('/new-post-form', function()
 		$post->title = Input::get('title');
 		$post->description = Input::get('description');
 		
-		$s3 = App::make('aws')->createClient('s3');
-		$result = $s3->putObject(array(
+		$s3 = AWS::createClient('s3');
+		$s3->putObject(array(
 	    	'Bucket'     => 'lotusreelmedia',
 			'Key'        =>  "uploads/{$name}",
 			'SourceFile' =>  $tmp_file_path,
@@ -239,6 +239,7 @@ Route::post('/new-post-form', function()
 		
 				
 		$post->file = $s3->getObjectUrl('lotusreelmedia', "uploads/{$name}");
+		$post->file_type = $extension;
 		$post->user_id = $user->id;
 		
 		$post->save();

@@ -14,6 +14,13 @@ $(document).ready(function(){
 @section('content')
 <?php
 	$user = Auth::user();
+	
+	$totPosts = 0;
+	$new_array = array();
+	for($i = 0; $i < sizeof(json_decode(json_encode($posts_query), true)); $i++){
+		$new_array[$i] = json_decode(json_encode($posts_query[$i]), true);
+		$totPosts++;
+	}
 ?>
 <div class="growl" id="app-growl"></div>
 
@@ -123,41 +130,86 @@ $(document).ready(function(){
     	</div>
 
 		<ul class="list-group media-list media-list-stream">
-			<?php
-				$new_array = array();
-				for($i = 0; $i < sizeof(json_decode(json_encode($posts_query), true)); $i++){
-						$new_array[$i] = json_decode(json_encode($posts_query[$i]), true);
-					}
-			
-					foreach($new_array as $post){
-  					$user_query = DB::table('users')->where('id', '=', $post['user_id'])->get();
-  					$post_user = json_decode(json_encode($user_query[0]), true);
+			<?php	
+				$new_array = array_reverse($new_array);
+				foreach($new_array as $post){
+					$user_query = DB::table('users')->where('id', '=', $post['user_id'])->get();
+					$post_user = json_decode(json_encode($user_query[0]), true);
+  					
+  					if($post['file_type'] == 'jpg' || $post['file_type'] == 'bmp' || $post['file_type'] == 'png' || $post['file_type'] == 'gif'){
 			?>
-			<li class="media list-group-item p-a">
-  				<a class="media-left" href="#">
-	  				<img class="media-object img-circle" src="<? echo $post_user['profile_photo']; ?>">
-	  			</a>
-	  			<div class="media-body">
-		  			<div class="media-heading">
-			  			<small class="pull-right text-muted">4 min</small>
-			  			<h5><?php echo $post_user['firstname']; echo " ".$post_user['lastname']; ?></h5>
-			  		</div>
+					<li class="media list-group-item p-a">
+						<a class="media-left" href="#">
+							<img class="media-object img-circle" src="<? echo $post_user['profile_photo']; ?>">
+						</a>
+						<div class="media-body">
+							<div class="media-heading">
+								<small class="pull-right text-muted">4 min</small>
+								<h5><?php echo $post_user['firstname']; echo " ".$post_user['lastname']; ?></h5>
+							</div>
 	
-			  			<p>
-				  			<?php echo $post['description']; ?>	            
-				  		</p>
-				  	<div class="media-body-inline-grid" data-grid="images">
-					  	<div style="display: none">
-						  	<img data-action="zoom" data-width="1050" data-height="700" src="<? echo $post['file'] ?>">
+							<p>
+				  				<?php echo $post['description']; ?>	            
+				  			</p>
+				  			<div class="media-body-inline-grid" data-grid="images">
+					  			<div style="display: none">
+						  		<img data-action="zoom" data-width="1050" data-height="700" src="<? echo $post['file'] ?>">
+						  	</div>
 						</div>
-					</div>
-					<button class="btn btn-default-outline" type="button">
-  <span class="icon icon-thumbs-up"></span>
-  Like
-</button>
-	  			</div>
-			</li>
+						<hr>
+						<button class="btn btn-default-outline" type="button"><span class="icon icon-thumbs-up"></span>Like</button>
+						</div>
+					</li>
+			<?
+					}
+					else if($post['file_type'] == 'mov' || $post['file_type'] == 'mp4' || $post['file_type'] == 'wmv'){
+			?>
+						<li class="media list-group-item p-a">
+							<a class="media-left" href="#">
+								<img class="media-object img-circle" src="<? echo $post_user['profile_photo']; ?>">
+							</a>
+							<div class="media-body">
+								<div class="media-heading">
+									<small class="pull-right text-muted">4 min</small>
+									<h5><?php echo $post_user['firstname']; echo " ".$post_user['lastname']; ?></h5>
+								</div>
+								<p>
+					  				<?php echo $post['description']; ?>	            
+					  			</p>
+					  			
+					  			<video controls="" name="media">
+					  				<source src="<?php echo $post['file']; ?>" type="video/mp4">
+					  			</video>
+					  		<hr>
+					  		<button class="btn btn-default-outline" type="button"><span class="icon icon-thumbs-up"></span>Like</button>
+					  		</div>
+						</li>
 			<?php
+					}
+					else if($post['file_type'] == 'mp3' || $post['file_type'] == 'm4a'){			
+			?>
+						<li class="media list-group-item p-a">
+							<a class="media-left" href="#">
+								<img class="media-object img-circle" src="<? echo $post_user['profile_photo']; ?>">
+							</a>
+							<div class="media-body">
+								<div class="media-heading">
+									<small class="pull-right text-muted">4 min</small>
+									<h5><?php echo $post_user['firstname']; echo " ".$post_user['lastname']; ?></h5>
+								</div>
+								<p>
+					  				<?php echo $post['description']; ?>	            
+					  			</p>
+	
+				  				<audio controls="" name="media">
+					  				<source src="<?php echo $post['file']; ?>" type="audio/mp3">
+					  			</audio>
+					  		<hr>
+					  		<button class="btn btn-default-outline" type="button"><span class="icon icon-thumbs-up"></span>Like</button>
+							</div>
+						</li>
+			<?php			
+					}
 				}
 			?>
 		</ul>		
@@ -182,12 +234,11 @@ $(document).ready(function(){
           </h5>
 
           <p class="m-b-md"><?php echo $user['bio'];?></p>
-
           <ul class="panel-menu">
             <li class="panel-menu-item">
               <a href="#userModal" class="text-inherit" data-toggle="modal">
                 Posts
-                <h5 class="m-y-0">2</h5>
+                <h5 class="m-y-0"><? echo $totPosts; ?></h5>
               </a>
             </li>
           </ul>

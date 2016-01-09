@@ -22,6 +22,7 @@ class CreatePostsTable extends Migration
 			$table->string('title');
 			$table->string('description');
 			$table->string('file');
+			$table->string('file_type');
 			$table->integer('user_id')->unsigned();
 			$table->integer('collection_id')->unsigned();
 			
