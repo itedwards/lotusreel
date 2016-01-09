@@ -109,6 +109,13 @@
   </nav>
 </div>
 
+<?php if($user['id'] != Auth::id()){ ?>
+  <div class="media-body-actions">
+      <button class="btn btn-primary-outline btn-sm" id="follow">
+      <span class="icon icon-add-user"></span>Follow</button>
+  </div>
+<? } ?>
+
 <div class="container m-y-md" data-grid="images">
   <div>
     <img data-width="640" data-height="400" data-action="zoom" src="../assets/img/instagram_5.jpg">
@@ -186,5 +193,18 @@
           while(BS.loader.length){(BS.loader.pop())()}
         }
       })
+
+      $(document).ready(function(){
+        $('#follow').click(function(){
+          var clickBtnValue = $(this).val();
+          var ajaxurl = '/add-follower',
+          data =  {'action': clickBtnValue};
+          $.post(ajaxurl, data, function (response) {
+            // Response div goes here.
+            alert("action performed successfully");
+          });
+      });
+
+});
     </script>
 @stop
