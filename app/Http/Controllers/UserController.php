@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Http\Controllers\Controller;
 
@@ -154,5 +156,24 @@ class UserController extends Controller
 		}
 	}
 
+	public function addFollower($id){
+		$user = Auth::user();
+		if ($user['followed'] == "") {
+			$following = [];
+		}
+		else{
+			$following = unserialize($user['followed']);
+		}
 
+		array_push($following, $id);
+
+		$following = serialize($following);
+
+		DB::table('users')
+			->where('id', $user['id'])
+			->update(['followed' => $following]);
+
+		return Redirect::to('/home');
+
+	}
 }

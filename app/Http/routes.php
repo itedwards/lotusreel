@@ -46,6 +46,8 @@ Route::get('/new-post-form', function()
 
 Route::post('/new-post-form', 'PostController@addPost');
 
+Route::get('/add-follower/{id}', 'UserController@addFollower');
+
 Route::get('/debug', function() {
 
     echo '<pre>';

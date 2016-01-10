@@ -110,10 +110,12 @@
 </div>
 
 <?php if($user['id'] != Auth::id()){ ?>
-  <div class="media-body-actions">
-      <button class="btn btn-primary-outline btn-sm" id="follow">
-      <span class="icon icon-add-user"></span>Follow</button>
-  </div>
+  <form action="/add-follower/<?php echo $user['id']; ?>" method="get">
+    <div class="media-body-actions">
+        <button class="btn btn-primary-outline btn-sm" action="submit">
+        <span class="icon icon-add-user"></span>Follow</button>
+    </div>
+  </form>
 <? } ?>
 
 <div class="container m-y-md" data-grid="images">
@@ -193,18 +195,5 @@
           while(BS.loader.length){(BS.loader.pop())()}
         }
       })
-
-      $(document).ready(function(){
-        $('#follow').click(function(){
-          var clickBtnValue = $(this).val();
-          var ajaxurl = '/add-follower',
-          data =  {'action': clickBtnValue};
-          $.post(ajaxurl, data, function (response) {
-            // Response div goes here.
-            alert("action performed successfully");
-          });
-      });
-
-});
     </script>
 @stop
