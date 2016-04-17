@@ -13,13 +13,14 @@ class CreateCollectionsTable extends Migration
     public function up()
     {
         Schema::create('collections', function(Blueprint $table){
-	        $table->increments('id');
-	        $table->string('collection_name');
-	        $table->integer('posts_in_collection');
-	        $table->integer('user_id')->unsigned();
-	        
-	        $table->foreign('user_id')->references('id')->on('users');
-        });	
+            $table->increments('id');
+            $table->timestamps();
+            $table->string('collection_name');
+            $table->integer('posts_in_collection');
+            $table->integer('user_id')->unsigned();
+            
+            $table->foreign('user_id')->references('id')->on('users');
+        }); 
     }
 
     /**

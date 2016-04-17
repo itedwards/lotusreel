@@ -145,7 +145,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Aws\Laravel\AwsServiceProvider::class,
-
+        'Laracasts\Utilities\JavaScript\JavaScriptServiceProvider',
     ],
 
     /*

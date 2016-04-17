@@ -1,19 +1,15 @@
 @extends('master')
 
 @section('title')
-	
+	New Collection
 @stop
 
 <?php
-  $query = DB::table('users')
-    ->where('id', '=', $id)
-    ->get();
-  $user = json_decode(json_encode($query[0]), true);
-				
+	$user = Auth::user();
 ?>
 
 @section('content')
-<nav class="navbar navbar-inverse navbar-fixed-top app-navbar">
+	<nav class="navbar navbar-inverse navbar-fixed-top app-navbar">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-main">
@@ -80,18 +76,17 @@
       </div>
   </div>
 </nav>
-
-
-    <script src="../assets/js/jquery.min.js"></script>
-    <script src="../assets/js/chart.js"></script>
-    <script src="../assets/js/toolkit.js"></script>
-    <script src="../assets/js/application.js"></script>
-    <script>
-      // execute/clear BS loaders for docs
-      $(function(){
-        if (window.BS&&window.BS.loader&&window.BS.loader.length) {
-          while(BS.loader.length){(BS.loader.pop())()}
-        }
-      })
-    </script>
+<br>
+<div class="col-md-4">
+<h1>New Collection</h1>
+	<form action="/new-collection-form" method="post" enctype="multipart/form-data">
+		<div class="form-group">
+			<input class="form-control" name="title" placeholder="Title" type="text">
+		</div>
+	    <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
+		<div class="form-group">
+			<button type="submit" class="btn btn-default">Create</button>
+		</div>
+	</form>
+</div>
 @stop

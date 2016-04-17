@@ -10,6 +10,9 @@
 		<meta name="keywords" content="">
 		<meta name="author" content="">
 		<meta name="csrf-token" content="{{ csrf_token() }}" />
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
 		
 		<script type="text/javascript">
 			$.ajaxSetup({
@@ -18,7 +21,7 @@
 				}
 			});
 		</script>
-		
+
 		
 		
     	<link rel='stylesheet' href='{{ asset('css/foobar.css') }}'>
@@ -32,7 +35,6 @@
 		<!-- Latest compiled and minified JavaScript -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 		
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		
 		<link href='https://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
 		
@@ -58,6 +60,10 @@
 		@yield('nav')
 			 
 		@yield('content')
+
+		@yield('footer')
+
+
 
 	</body>
 </html>

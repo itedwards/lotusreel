@@ -30,7 +30,9 @@ Route::post('sign-up', 'UserController@signUp');
 
 Route::get('/home', 'PostController@getPosts');
 
-Route::get('/profile/{id}', 'PostController@showProfile');
+Route::post('/home', 'PostController@postInteraction');
+
+Route::get('/{name}', 'PostController@showProfile');
 
 Route::get('/new-post-form', function()
 {
@@ -46,7 +48,19 @@ Route::get('/new-post-form', function()
 
 Route::post('/new-post-form', 'PostController@addPost');
 
-Route::get('/add-follower/{id}', 'UserController@addFollower');
+Route::get('/new-collection-form', function()
+{
+	if(Auth::check())
+	{
+		Return View::make('new_collection_form');
+	}
+	else
+	{
+		return Redirect::to('/');
+	}
+});
+
+Route::post('/new-collection-form', 'CollectionController@addCollection');
 
 Route::get('/debug', function() {
 

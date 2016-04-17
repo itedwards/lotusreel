@@ -7,7 +7,11 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
-use App\User;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\User;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Hash;
+
 use App\Http\Controllers\Controller;
 
 class UserController extends Controller
@@ -143,6 +147,15 @@ class UserController extends Controller
 				$user->email = Input::get('email');
 				$user->password = Hash::make(Input::get('password'));
 				$user->save();
+
+				// Default collection for posts created for the user
+				$collection = new \App\Collection;
+
+				$collection->collection_name = "My Creations";
+				$collection->posts_in_collection = 0;
+				$collection->user_id = $user->id;
+
+				$collection->save();
 				
 				
 				Auth::login($user);
@@ -174,7 +187,7 @@ class UserController extends Controller
 			->where('id', $user['id'])
 			->update(['followed' => $following]);
 
-		return Redirect::to('/home');
+		return Redirect::to('/profile/$id');
 
 	}
 }
