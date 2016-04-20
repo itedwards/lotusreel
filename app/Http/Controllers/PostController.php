@@ -34,12 +34,6 @@ class PostController extends Controller
 		}
 	}
 
-	// gets profile page of user with the requested id
-	public function showProfile($id){
-		return View::make('profile')
-			->with('id', $id);
-	}
-
 	// Handles post additon by adding main file to Amazon s3 and putting all general information into database
 	public function addPost(){
 		$user = Auth::user();

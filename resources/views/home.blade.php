@@ -1,14 +1,12 @@
 @extends('master')
 
 @section('head')
-<script type="text/javascript">
-$(document).ready(function(){ 
-    $("#myTab a").click(function(e){
-    	e.preventDefault();
-    	$(this).tab('show');
-    });
-});
-</script>
+  <link rel="import" href="/bower_components/paper-toolbar/paper-toolbar.html">
+  <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+  <link rel="import" href="/bower_components/iron-icons/maps-icons.html">
+  <link rel="import" href="/bower_components/paper-input/paper-input.html">
+
 @stop
 
 @section('content')
@@ -38,73 +36,15 @@ $(document).ready(function(){
   
 ?>
 
-<!---<nav class="navbar navbar-inverse navbar-fixed-top app-navbar">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-main">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="index.html">
-        <img src="assets/img/brand-white.png" alt="brand">
-      </a>
-    </div>
-    <div class="navbar-collapse collapse" id="navbar-collapse-main">
-
-        <ul class="nav navbar-nav hidden-xs">
-          <li class="active">
-            <a href="index.html">Home</a>
-          </li>
-          <li>
-            <a href="profile/<?php echo Auth::id(); ?>">Profile</a>
-          </li>
-          <li>
-            <a data-toggle="modal" href="#msgModal">Messages</a>
-          </li>
-          <li>
-            <a href="docs/index.html">Docs</a>
-          </li>
-        </ul>
-
-        <ul class="nav navbar-nav navbar-right m-r-0 hidden-xs">
-          <li >
-            <a class="app-notifications" href="notifications/index.html">
-              <span class="icon icon-bell"></span>
-            </a>
-          </li>
-          <li>
-            <button class="btn btn-default navbar-btn navbar-btn-avitar" data-toggle="popover">
-              <img class="img-circle" src="<?php echo $user['profile_photo']; ?>">
-            </button>
-          </li>
-        </ul>
-
-        <form class="navbar-form navbar-right app-search" role="search">
-          <div class="form-group">
-            <input type="text" class="form-control" data-action="grow" placeholder="Search">
-          </div>
-        </form>
-
-        <ul class="nav navbar-nav hidden-sm hidden-md hidden-lg">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="profile/<?php echo Auth::id(); ?>">Profile</a></li>
-          <li><a href="notifications/index.html">Notifications</a></li>
-          <li><a data-toggle="modal" href="#msgModal">Messages</a></li>
-          <li><a href="docs/index.html">Docs</a></li>
-          <li><a href="#" data-action="growl">Growl</a></li>
-          <li><a href="/logout">Logout</a></li>
-        </ul>
-
-        <ul class="nav navbar-nav hidden">
-          <li><a href="#" data-action="growl">Growl</a></li>
-          <li><a href="/new-collection-form">Make Collection</a></li>
-          <li><a href="/logout">Logout</a></li>
-        </ul>
-      </div>
-  </div>
-</nav>-->
+<paper-toolbar>
+  <span class="title" style="font-family: 'Playball', cursive;">LotusReel</span>
+  <form class="navbar-form navbar-left" role="search">
+      <input type="text" class="form-control" placeholder="Search">
+    <paper-icon-button icon="search"></paper-icon-button>
+  </form>
+  <paper-icon-button icon="account-circle"></paper-icon-button>
+  <paper-icon-button icon="settings"></paper-icon-button>
+</paper-toolbar>
 
 <div class="container p-t-md">
 	
@@ -521,7 +461,7 @@ $(document).ready(function(){
       </div>
     </div>
   </div>
-</div>	
+</div>
 @stop
 
 @section('footer')
@@ -540,6 +480,7 @@ $(document).ready(function(){
     $( "#comment-button" ).click(function() {
       $( "#commentField" ).focus();
     });
+    
   </script>
 
 

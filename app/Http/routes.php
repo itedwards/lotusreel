@@ -32,7 +32,7 @@ Route::get('/home', 'PostController@getPosts');
 
 Route::post('/home', 'PostController@postInteraction');
 
-Route::get('/{name}', 'PostController@showProfile');
+Route::get('/{url_id}', 'UserController@showProfile');
 
 Route::get('/new-post-form', function()
 {

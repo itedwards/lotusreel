@@ -52,10 +52,13 @@
 			}	
 		</style>
 		
+		<!--- Polymer Components ---->
+		<script src="/bower_components/webcomponentsjs/webcomponents.js"></script>
+
     	@yield('head')
 
 	<head>
-	<body class="with-top-navbar">
+	<body class="fullbleed layout vertical">
 
 		@yield('nav')
 			 

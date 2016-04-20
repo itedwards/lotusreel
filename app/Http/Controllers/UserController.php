@@ -170,6 +170,12 @@ class UserController extends Controller
 		}
 	}
 
+	// gets profile page of user with the requested url_id
+	public function showProfile($url_id){
+		return View::make('profile')
+			->with('url_id', $url_id);
+	}
+
 	public function addFollower($id){
 		$user = Auth::user();
 		if ($user['followed'] == "") {
