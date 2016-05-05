@@ -6,7 +6,6 @@
   <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
   <link rel="import" href="/bower_components/iron-icons/maps-icons.html">
   <link rel="import" href="/bower_components/paper-input/paper-input.html">
-
 @stop
 
 @section('content')
@@ -153,7 +152,7 @@
           $allComments = json_decode(json_encode($allComments), true);
             
   					
-  				if($post['file_type'] == 'jpg' || $post['file_type'] == 'bmp' || $post['file_type'] == 'png' || $post['file_type'] == 'gif'){
+  				if($post['file_type'] == 'jpg' || $post['file_type'] == 'jpeg' || $post['file_type'] == 'bmp' || $post['file_type'] == 'png' || $post['file_type'] == 'gif'){
 			?>
 					<li class="media list-group-item p-a">
 						<a class="media-left" href="#">
@@ -378,14 +377,14 @@
       <div class="panel panel-default panel-profile m-b-md">
         <div class="panel-heading" style="background-image: url(<?php echo $user['cover_photo']; ?>);"></div>
         <div class="panel-body text-center">
-          <a href="/profile/<?php echo Auth::id(); ?>">
+          <a href="/<?php echo $user['url_id']; ?>">
             <img
               class="panel-profile-img"
               src= "<?php echo $user['profile_photo']; ?>"/>
           </a>
 
           <h5 class="panel-title">
-            <a class="text-inherit" href="/profile/<?php echo Auth::id(); ?>"><?php echo $user['firstname']; echo " ".$user['lastname']; ?></a>
+            <a class="text-inherit" href="/<?php echo $user['url_id']; ?>"><?php echo $user['firstname']; echo " ".$user['lastname']; ?></a>
           </h5>
 
           <p class="m-b-md"><?php echo $user['bio'];?></p>

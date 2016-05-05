@@ -172,8 +172,18 @@ class UserController extends Controller
 
 	// gets profile page of user with the requested url_id
 	public function showProfile($url_id){
+		$user_query = DB::table('users')
+    		->where('url_id', '=', $url_id)
+    		->get();
+  		$user = json_decode(json_encode($user_query[0]), true);
+
+		$posts_query = DB::table('posts')->where('user_id', '=', $user['id'])->get();
+		$collection_query = DB::table('collections')->where('user_id', '=', Auth::id())->get();
+
 		return View::make('profile')
-			->with('url_id', $url_id);
+			->with('posts_query', $posts_query)
+			->with('collection_query', $collection_query)
+			->with('user', $user);
 	}
 
 	public function addFollower($id){
