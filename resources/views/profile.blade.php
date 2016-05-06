@@ -117,42 +117,44 @@
 
 <iron-pages selected="0">
   
-<div class="tab-content">
-  <div class="freewall" id="freewall">
-      <?php 
-        $new_array = array_reverse($new_array);
-        foreach($new_array as $post){
-      ?>
-        <div class="profile-cells">
-          <paper-card image="<? echo $post['file']; ?>">
-            <div class="card-content">
-              <div class="cafe-header"><? echo $post['title']; ?>
-                <div class="cafe-location cafe-light">
-                  <iron-icon icon="communication:location-on"></iron-icon>
-                  <span>4 min</span>
+  <div class="tab-content">
+    <div class="freewall" id="freewall">
+        <?php 
+          $new_array = array_reverse($new_array);
+          foreach($new_array as $post){
+        ?>
+          <div class="profile-cells">
+            <paper-card image="<? echo $post['file']; ?>">
+              <div class="card-content">
+                <div class="cafe-header"><? echo $post['title']; ?>
+                  <div class="cafe-location cafe-light">
+                    <iron-icon icon="communication:location-on"></iron-icon>
+                    <span>4 min</span>
+                  </div>
+                </div>
+                <div class="cafe-rating">
+            
+                </div>
+                <p>$・</p>
+                <p class="cafe-light"><? echo $post['description']; ?></p>
+              </div>
+              <div class="card-actions">
+                <div class="horizontal justified">
+                  <button class="btn btn-default-outline like-buttons" type="button" id="<? echo $post['id']; ?>"><span class="icon icon-thumbs-up"></span> Like</button>
+                  <button class="btn btn-default-outline" type="button" id="comment-button"><span class="icon icon-chat"></span> Comment</button>
                 </div>
               </div>
-              <div class="cafe-rating">
-          
-              </div>
-              <p>$・</p>
-              <p class="cafe-light"><? echo $post['description']; ?></p>
-            </div>
-            <div class="card-actions">
-              <div class="horizontal justified">
-                <button class="btn btn-default-outline like-buttons" type="button" id="<? echo $post['id']; ?>"><span class="icon icon-thumbs-up"></span> Like</button>
-                <button class="btn btn-default-outline" type="button" id="comment-button"><span class="icon icon-chat"></span> Comment</button>
-              </div>
-            </div>
-          </paper-card>
-        </div>
-      <?
-        }
-      ?>
+            </paper-card>
+          </div>
+        <?
+          }
+        ?>
     </div>
+  </div>
 
   <div class="tab-content">
-    
+    <h1>Followers</h1>
+    <h1>Following</h1>
   </div>
 
   <div class="tab-content">
