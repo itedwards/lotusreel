@@ -17,8 +17,8 @@ return [
     |
     */
     'credentials' => [
-        'key'    => 'AKIAJEO4KYUZRXXPHQSA',
-        'secret' => '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',
+        'key'    => '',
+        'secret' => '',
     ],
     'region' => env('AWS_REGION', 'us-east-1'),
     'version' => 'latest',
