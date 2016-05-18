@@ -10,10 +10,6 @@ html {
     height: 100%;
 }
 
-a:hover{
-    text-decoration: none;
-}
-
 body,
 h1,
 h2,
@@ -22,6 +18,7 @@ h4,
 h5,
 h6 {
     font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 700;
 }
 
 .topnav {
@@ -47,7 +44,7 @@ h6 {
 .intro-message {
     position: relative;
     padding-top: 10%;
-    padding-bottom: 5%;
+    height: 100%;
 }
 
 .intro-message > h1 {

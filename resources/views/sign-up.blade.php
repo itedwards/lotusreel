@@ -29,6 +29,9 @@
 	    <div class="form-group">
 			<input class="form-control" name="bio" placeholder="Your bio (100 characters)" type="text">
 		</div>
+		<div class="form-group">
+			<input class="form-control" name="url_id" placeholder="Your URL ID (Added to your portfolio link - Example: lotusreel.com/your_url_id)" type="text">
+		</div>
 	    <div class="form-group">
 	    	<label for="InputFile">Profile Photo</label>
 	    	<input type="file" id="InputFile" name="profile_photo">

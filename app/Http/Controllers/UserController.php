@@ -126,7 +126,7 @@ class UserController extends Controller
 				$result = $s3->putObject(array(
 			    	'Bucket'     => 'lotusreelmedia',
 					'Key'        =>  "uploads/{$cover_name}",
-					'SourceFile' =>  $profile_tmp_file_path,
+					'SourceFile' =>  $cover_tmp_file_path,
 					'ACL' => 'public-read'
 				));
 				
@@ -146,6 +146,9 @@ class UserController extends Controller
 				$user->followed = "";
 				$user->email = Input::get('email');
 				$user->password = Hash::make(Input::get('password'));
+				$user->url_id = Input::get('url_id');
+
+
 				$user->save();
 
 				// Default collection for posts created for the user
@@ -171,22 +174,11 @@ class UserController extends Controller
 	}
 
 	// gets profile page of user with the requested url_id
-	public function showProfile($url_id){
-		$user_query = DB::table('users')
-    		->where('url_id', '=', $url_id)
-    		->get();
-  		$user = json_decode(json_encode($user_query[0]), true);
+	/*public function showProfile($url_id, $title){
 
-		$posts_query = DB::table('posts')->where('user_id', '=', $user['id'])->get();
-		$collection_query = DB::table('collections')->where('user_id', '=', Auth::id())->get();
+	}*/
 
-		return View::make('profile')
-			->with('posts_query', $posts_query)
-			->with('collection_query', $collection_query)
-			->with('user', $user);
-	}
-
-	public function addFollower($id){
+	public function addFollower($url_id){
 		$user = Auth::user();
 		if ($user['followed'] == "") {
 			$following = [];
@@ -195,7 +187,10 @@ class UserController extends Controller
 			$following = unserialize($user['followed']);
 		}
 
-		array_push($following, $id);
+		$followedUser = DB::table('users')->where('url_id', $url_id)->get();
+		$followedUser = json_decode(json_encode($followedUser[0]), true);
+
+		array_push($following, $followedUser['id']);
 
 		$following = serialize($following);
 
@@ -203,7 +198,7 @@ class UserController extends Controller
 			->where('id', $user['id'])
 			->update(['followed' => $following]);
 
-		return Redirect::to('/profile/$id');
+		return Redirect::to("/{$followedUser['url_id']}");
 
 	}
 }

@@ -32,13 +32,49 @@ Route::get('/home', 'PostController@getPosts');
 
 Route::post('/home', 'PostController@postInteraction');
 
-Route::get('/{url_id}', 'UserController@showProfile');
+Route::get('/profile/{url_id}/{title?}', function($url_id, $title = null){
 
-Route::get('/new-post-form', function()
+    $user_query = DB::table('users')
+        ->where('url_id', '=', $url_id)
+        ->get();
+
+    $user = json_decode(json_encode($user_query[0]), true);
+
+    $posts_query = DB::table('posts')->where('user_id', '=', $user['id'])->get();
+    $collection_query = DB::table('collections')->where('user_id', '=', Auth::id())->get();
+
+    if($title == null){
+        $posts_query = DB::table('posts')->where('user_id', '=', $user['id'])->get();
+        $collection_query = DB::table('collections')->where('user_id', '=', Auth::id())->get();
+
+        return View::make('profile')
+            ->with('posts_query', $posts_query)
+            ->with('collection_query', $collection_query)
+            ->with('user', $user);
+    }
+    else{
+
+        $posts_query = DB::table('posts')
+            ->where('user_id', '=', $user['id'])
+            ->where('title', '=', $title)
+            ->get();
+
+        return View::make('post')
+            ->with('posts_query', $posts_query)
+            ->with('user', $user);
+    }
+
+});
+
+Route::post('/{url_id}', 'UserController@addFollower');
+
+Route::get('/upload', function()
 {
 	if(Auth::check())
 	{
-		Return View::make('new_post_form');
+        $collection_query = DB::table('collections')->where('user_id', '=', Auth::id())->get();
+		Return View::make('new_post_form')
+            ->with('collection_query', $collection_query);
 	}
 	else
 	{
@@ -46,7 +82,13 @@ Route::get('/new-post-form', function()
 	}
 });
 
-Route::post('/new-post-form', 'PostController@addPost');
+Route::post('/upload', 'PostController@addPost');
+
+Route::get('/explore', function(){
+
+    return View::make('explore');
+
+});
 
 Route::get('/new-collection-form', function()
 {

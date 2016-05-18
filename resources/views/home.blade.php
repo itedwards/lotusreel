@@ -35,83 +35,50 @@
   
 ?>
 
-<paper-toolbar>
-  <span class="title" style="font-family: 'Playball', cursive;">LotusReel</span>
-  <form class="navbar-form navbar-left" role="search">
-      <input type="text" class="form-control" placeholder="Search">
-    <paper-icon-button icon="search"></paper-icon-button>
-  </form>
-  <paper-icon-button icon="account-circle"></paper-icon-button>
-  <paper-icon-button icon="settings"></paper-icon-button>
-</paper-toolbar>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/" style="font-family: 'Playball', cursive;">LotusReel</a>
+    </div>
 
-<div class="container p-t-md">
-	
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> My Reel <span class="sr-only">(current)</span></a></li>
+        <li><a href="/profile/<? echo $user['url_id']; ?>"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> My Portfolio</a></li>
+        <li><a href="/explore"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Explore</a></li>
+      </ul>
 
-    <div class="col-md-8">
-    	<div class="panel-group" id="accordion">
-	        <div class="panel panel-default">
-	        	<a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-	           		<div class="panel-heading">
-	                	<h4 class="panel-title">
-	                    	<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Create
-	                    	<span class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true"></span>
-						</h4>
-					</div>
-	        	</a>
-            	<div id="collapseTwo" class="panel-collapse collapse">
-                	<div class="panel-body">
-                    <ul class="nav nav-tabs">
-                      <li class="active"><a data-toggle="tab" href="#newPost">New Post</a></li>
-                      <li><a data-toggle="tab" href="#newCollection">New Collection</a></li>
-                    </ul>
-                    <br>
-                    <div class="tab-content">
-                      <div id="newPost" class="tab-pane fade in active">
-            						<form action="/new-post-form" method="post" enctype="multipart/form-data">
-            							<div class="form-group">
-            								<label for="title">Title</label>
-            								<input type="text" class="form-control" id="title" placeholder="Give Post a Title" name="title" id="title">
-            							</div>
-            							<div class="form-group">
-            								<label for="description" >Description</label>
-            								<textarea class="form-control" rows="3" placeholder="Give Post a Description" name="description" id="description"></textarea>
-            							</div>
-            							<div class="form-group">
-            								<label for="InputFile">Your Creation</label>
-            								<input type="file" id="InputFile" name="file">
-            								<p class="help-block">Make it anything.</p>
-            							</div>
-                          <div>
-                            <label for="collectionSelect">Collection</label>
-                            <select name="collection" class="custom-select custom-select-sm">
-                              <?php foreach($collections as $collection){ ?>
-                                <option value="<?php echo $collection['id']; ?>"><?php echo $collection['collection_name']; ?></option>
-                              <? } ?>
-                            </select>
-                          </div>
-                          <br>
-            							<button type="submit" class="btn btn-default">Submit</button>
-            						</form>
-                      </div>
-                      <div id="newCollection" class="tab-pane fade">
-                        <form action="/new-collection-form" method="post" enctype="multipart/form-data">
-                          <div class="form-group">
-                            <label for="title">Title</label>
-                
-                            <input class="form-control" name="title" placeholder="Title" type="text">
-                          </div>
-                            <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
-                          <div class="form-group">
-                            <button type="submit" class="btn btn-default">Create</button>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-      					 </div>
-				    </div>
-			</div>
-    	</div>
+      <div class="col-lg-6">
+        <div class="input-group">
+          <form class="navbar-form navbar-left" role="search">
+            <input type="text" class="form-control" placeholder="Search">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button">Go!</button>
+            </span>
+          </form>
+        </div><!-- /input-group -->
+      </div><!-- /.col-lg-6 -->
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/upload"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Upload</a></li>
+        <li><a href="/logout">Log Out</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<br>
+<br>
+
+<div style="margin:20px">
+  <div class="col-md-8">
 
 		<ul class="list-group media-list media-list-stream">
 			<?php	
@@ -229,7 +196,7 @@
 
                   <li class="media" id="commentArea">
                     <a class="media-left" href="#">
-                      <img class="media-object img-circle" src="<? echo $post_user['profile_photo']; ?>">
+                      <img class="media-object img-circle" src="<? echo $user['profile_photo']; ?>">
                     </a>
                     <div class="media-body">
                       <strong><? echo $user['firstname']; echo " ".$user['lastname'].": "; ?></strong>
@@ -377,14 +344,14 @@
       <div class="panel panel-default panel-profile m-b-md">
         <div class="panel-heading" style="background-image: url(<?php echo $user['cover_photo']; ?>);"></div>
         <div class="panel-body text-center">
-          <a href="/<?php echo $user['url_id']; ?>">
+          <a href="/profile/<?php echo $user['url_id']; ?>">
             <img
               class="panel-profile-img"
               src= "<?php echo $user['profile_photo']; ?>"/>
           </a>
 
           <h5 class="panel-title">
-            <a class="text-inherit" href="/<?php echo $user['url_id']; ?>"><?php echo $user['firstname']; echo " ".$user['lastname']; ?></a>
+            <a class="text-inherit" href="/profile/<?php echo $user['url_id']; ?>"><?php echo $user['firstname']; echo " ".$user['lastname']; ?></a>
           </h5>
 
           <p class="m-b-md"><?php echo $user['bio'];?></p>

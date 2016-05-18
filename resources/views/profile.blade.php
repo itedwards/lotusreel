@@ -4,7 +4,9 @@
 	
 @stop
 
-<?php     
+<?php
+  $currUser = Auth::user();
+
   $cover_photo = $user['cover_photo'];
 
   $totPosts = 0;
@@ -34,8 +36,7 @@
   <link rel="import" href="/bower_components/iron-fit-behavior/iron-fit-behavior.html">
   <link rel="import" href="/bower_components/iron-pages/iron-pages.html">
   <link rel="stylesheet" href="/css/profile.css">
-  <script src="assets/js/freewall.js"></script>
-
+  <script src="../assets/js/mason.js"></script>
 
   <style is="custom-style">
     .intro-header {
@@ -46,34 +47,29 @@
       background: url(<? echo $cover_photo; ?>) no-repeat center center fixed;
       background-size: cover;
     }
-    .cafe-header { 
-      @apply(--paper-font-headline); 
-    }
-    .cafe-light { 
-      color: var(--paper-grey-600); 
-    }
-    .cafe-location {
-      float: right;
-      font-size: 15px;
-      vertical-align: middle;
-    }
-    .cafe-reserve { color: var(--google-blue-500); }
-      iron-icon.star {
-        --iron-icon-width: 16px;
-        --iron-icon-height: 16px;
-        color: var(--paper-amber-500);
-    }
-    iron-icon.star:last-of-type { 
-      color: var(--paper-grey-500); 
-    }
 
-    .profile-cells {
-      width: 320px;
-      height: 320px;
-    }
-
-    .freewall{
+   .free-wall {
       margin: 15px;
+    }
+    .brick {
+      width: 320px;
+      background: white;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+      border-radius: 3px;
+      color: #333;
+      border: none;
+    }
+    .info {
+      padding: 15px;
+      color: #333;
+    }
+    .brick img {
+      margin: 0px;
+      padding: 0px;
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      display: block;
     }
   </style>
 
@@ -81,18 +77,43 @@
 @stop
 
 @section('content')
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/" style="font-family: 'Playball', cursive;">LotusReel</a>
+    </div>
 
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="/"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> My Reel</a></li>
+          <li class="active"><a href="/profile/<? echo $user['url_id']; ?>"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> My Portfolio <span class="sr-only">(current)</span></a></li>
+          <li><a href="/explore"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Explore</a></li>
+        </ul>
+      <form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Search</button>
+      </form>
 
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/upload"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Upload</a></li>
+        <li><a href="/logout">Log Out</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<br>
+<br>
 
-<paper-toolbar>
-  <span class="title" style="font-family: 'Playball', cursive;">LotusReel</span>
-  <form class="navbar-form navbar-left" role="search">
-      <input type="text" class="form-control" placeholder="Search">
-    <paper-icon-button icon="search"></paper-icon-button>
-  </form>
-  <paper-icon-button icon="account-circle"></paper-icon-button>
-  <paper-icon-button icon="settings"></paper-icon-button>
-</paper-toolbar>
 
 <div class="intro-header">
   <div class="container">
@@ -103,6 +124,36 @@
                   <h1><? echo $user['firstname']; echo " ".$user['lastname']; ?></h1>
                   <h3><? echo $user['bio']; ?></h3>
                   <hr class="intro-divider">
+                  <?
+                    if($user['id'] != Auth::id()){
+                      $isFollowing = false;
+                      $currFollows = unserialize($currUser['following']);
+                      for($i = 0; $i < sizeof($currFollows); $i++){
+                        if($currFollows[$i] == $user['id']){
+                          $isFollowing = true;
+                        }
+                      }
+
+                      if($isFollowing == false){
+                  ?>
+                        <form action="/<? echo $user['url_id']?>" method="post">
+                          <button type="submit" class="btn btn-primary-outline">
+                            <span class="icon icon-add-user"></span> Follow
+                          </button>
+                        </form>
+                  <?
+                      }
+                      else{
+                  ?>
+                        <form action="/<? echo $user['url_id']?>" method="post">
+                          <button type="submit" class="btn btn-primary">
+                            <span class="icon icon-add-user"></span> Following!
+                          </button>
+                        </form>
+                  <?
+                      }
+                    }
+                  ?>
               </div>
           </div>
       </div>
@@ -117,35 +168,19 @@
 
 <iron-pages selected="0">
   
-  <div class="tab-content">
-    <div class="freewall" id="freewall">
+  <div class="tab-content" id="grid">
+    <div id="freewall" class="free-wall">
         <?php 
           $new_array = array_reverse($new_array);
           foreach($new_array as $post){
         ?>
-          <div class="profile-cells">
-            <paper-card image="<? echo $post['file']; ?>">
-              <div class="card-content">
-                <div class="cafe-header"><? echo $post['title']; ?>
-                  <div class="cafe-location cafe-light">
-                    <iron-icon icon="communication:location-on"></iron-icon>
-                    <span>4 min</span>
-                  </div>
-                </div>
-                <div class="cafe-rating">
-            
-                </div>
-                <p>$・</p>
-                <p class="cafe-light"><? echo $post['description']; ?></p>
-              </div>
-              <div class="card-actions">
-                <div class="horizontal justified">
-                  <button class="btn btn-default-outline like-buttons" type="button" id="<? echo $post['id']; ?>"><span class="icon icon-thumbs-up"></span> Like</button>
-                  <button class="btn btn-default-outline" type="button" id="comment-button"><span class="icon icon-chat"></span> Comment</button>
-                </div>
-              </div>
-            </paper-card>
-          </div>
+          <div class="brick">
+            <img href="/<? echo $user['url_id']; ?>/<? echo $post['title']; ?>" src="<? echo $post['file']; ?>" width="100%">
+            <div class="info">
+                <h3><a href="/<? echo $user['url_id']; ?>/<? echo $post['title']; ?>"><? echo $post['title']; ?></a></h3>
+                <h5><? echo $post['description']; ?></h5>
+            </div>
+        </div>
         <?
           }
         ?>
@@ -182,21 +217,20 @@
         pages.selected = tabs.selected;
     });
 
-  var wall = new Freewall("#freewall");
 
+  var wall = new Freewall("#freewall");
   wall.reset({
-    selector: '.profile-cells',
+    selector: '.brick',
     animate: true,
-    cellW: 20,
-    cellH: 200,
+    cellW: 320,
+    cellH: 'auto',
     onResize: function() {
       wall.fitWidth();
     }
   });
 
-  wall.fitWidth();
-  // for scroll bar appear;
-  $(window).trigger("resize");
-
+  wall.container.find('.brick img').load(function() {
+    wall.fitWidth();
+  });
 </script>
 @stop
