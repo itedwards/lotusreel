@@ -9,6 +9,17 @@
   }
 ?>
 
+@section('head')
+	<link rel="stylesheet" href="/css/bootstrap-tagsinput.css">
+
+	<style>
+    input[type="file"] {
+      display: none;
+    }
+  </style>
+
+@stop
+
 @section('content')
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
@@ -53,52 +64,23 @@
 <br>
 <br>
 <div class="container">
-  <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#newPost">New Post</a></li>
-    <li><a data-toggle="tab" href="#newCollection">New Collection</a></li>
-  </ul>
-  <br>
-  <div class="tab-content">
-    <div id="newPost" class="tab-pane fade in active">
-			<form action="/upload" method="post" enctype="multipart/form-data">
-				<div class="form-group">
-					<label for="title">Title</label>
-					<input type="text" class="form-control" id="title" placeholder="Give Post a Title" name="title" id="title">
-				</div>
-				<div class="form-group">
-					<label for="description" >Description</label>
-					<textarea class="form-control" rows="3" placeholder="Give Post a Description" name="description" id="description"></textarea>
-				</div>
-				<div class="form-group">
-					<label for="InputFile">Your Creation</label>
-					<input type="file" id="InputFile" name="file">
-					<p class="help-block">Make it anything.</p>
-				</div>
-        <div>
-          <label for="collectionSelect">Collection</label>
-          <select name="collection" class="custom-select custom-select-sm">
-            <?php foreach($collections as $collection){ ?>
-              <option value="<?php echo $collection['id']; ?>"><?php echo $collection['collection_name']; ?></option>
-            <? } ?>
-          </select>
-        </div>
-        <br>
-				<button type="submit" class="btn btn-default">Submit</button>
-			</form>
-    </div>
-    <div id="newCollection" class="tab-pane fade">
-	    <form action="/new-collection-form" method="post" enctype="multipart/form-data">
-	      <div class="form-group">
-	        <label for="title">Title</label>
-
-	        <input class="form-control" name="title" placeholder="Title" type="text">
-	      </div>
-	        <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
-	      <div class="form-group">
-	        <button type="submit" class="btn btn-default">Create</button>
-	      </div>
-	    </form>
+	<form action="/upload" method="post" enctype="multipart/form-data">
+		<div class="well" style="width: 55%; margin: auto; padding:20px">
+	  	<h1 align="center" style="font-family: 'Playball', cursive;">Add your Creation to LotusReel</h1>
+	  	<br>
+	  	<center>
+		  	<label class="btn btn-lg btn-pill btn-info" style="vertical-align:middle;">
+	    		<input type="file"/>
+	    		Upload
+				</label>
+			</center>
 	  </div>
-  </div>
+
+	  <center>
+	  	<input type="text" data-role="tagsinput">
+	  </center>
+	</form>
 </div>
+<script src="assets/js/bootstrap-tagsinput.js"></script>
+<script src="assets/js/bootstrap-tagsinput-angular.js"></script>
 @stop

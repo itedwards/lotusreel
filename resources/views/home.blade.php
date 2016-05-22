@@ -6,6 +6,7 @@
   <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
   <link rel="import" href="/bower_components/iron-icons/maps-icons.html">
   <link rel="import" href="/bower_components/paper-input/paper-input.html">
+
 @stop
 
 @section('content')
