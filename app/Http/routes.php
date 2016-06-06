@@ -66,7 +66,7 @@ Route::get('/profile/{url_id}/{title?}', function($url_id, $title = null){
 
 });
 
-Route::post('/{url_id}', 'UserController@addFollower');
+Route::post('/profile/{url_id}', 'UserController@addFollower');
 
 Route::get('/upload', function()
 {

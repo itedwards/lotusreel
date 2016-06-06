@@ -3,7 +3,7 @@
 
 @section('content')
 <?php
-	$results = json_decode(json_encode($resp['concepts']), true);
+	/*$results = json_decode(json_encode($resp['concepts']), true);
 	
 	$keywords = array();
 
@@ -18,6 +18,8 @@
 		}
 	}
 
-	print_r($keywords);
+	print_r($keywords);*/
+
+	var_dump($resp);
 ?>
 @stop

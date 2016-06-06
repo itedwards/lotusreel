@@ -65,22 +65,53 @@
 <br>
 <div class="container">
 	<form action="/upload" method="post" enctype="multipart/form-data">
-		<div class="well" style="width: 55%; margin: auto; padding:20px">
+		<div class="well" style="width: 75%; margin: auto;">
 	  	<h1 align="center" style="font-family: 'Playball', cursive;">Add your Creation to LotusReel</h1>
 	  	<br>
 	  	<center>
 		  	<label class="btn btn-lg btn-pill btn-info" style="vertical-align:middle;">
-	    		<input type="file"/>
-	    		Upload
+	    		<input name="file" type="file"/>
+	    			<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload
 				</label>
 			</center>
 	  </div>
+	  <br>
+	  <div class="well" style="width: 75%; margin: auto; padding:20px">
 
+	  	<div class="form-group">
+				<label for="title">Title</label>
+				<input style="width:30%;" type="text" class="form-control" id="title" placeholder="Give Post a Title" name="title" id="title">
+			</div>
+
+			<div class="form-group">
+				<label for="description">Description</label>
+				<textarea class="form-control" rows="5" placeholder="Give Post a Description" name="description" id="description"></textarea>
+			</div>
+
+			<div style="display:inline-block">
+        <label for="collectionSelect">Collection</label>
+        <select name="collection" class="custom-select custom-select-sm">
+          <?php foreach($collections as $collection){ ?>
+            <option value="<?php echo $collection['id']; ?>"><?php echo $collection['collection_name']; ?></option>
+          <? } ?>
+        </select>
+        <label for="tags">Tags</label>
+        <input type="text" id="tags" name="tags" data-role="tagsinput">
+      </div>
+	  </div>
+	  <br>
 	  <center>
-	  	<input type="text" data-role="tagsinput">
-	  </center>
+	  	<button class="btn btn-lg btn-pill btn-info" type="submit">
+    		<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+    	</button>
+		</center>
 	</form>
 </div>
 <script src="assets/js/bootstrap-tagsinput.js"></script>
 <script src="assets/js/bootstrap-tagsinput-angular.js"></script>
+<script>
+	$('#tags').tagsinput({
+  	maxTags: 5
+	});
+</script>
 @stop

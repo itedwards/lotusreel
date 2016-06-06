@@ -93,14 +93,53 @@ class PostController extends Controller
 			$post->likes = "";
 			$post->comments = "";
 
+			$post->man_id = $target = uniqid();
+
 			$post->user_id = $user->id;
 			
 			$post->save();
 			
 			unlink("../files/{$tmp_file_name}");
 
+			$tags = explode(",", Input::get('tags'));
 
-			$url = 'http://gateway-a.watsonplatform.net/calls/text/TextGetRankedConcepts?';
+			foreach($tags as $tag){
+				if(DB::table('tags')->where('tag_name', '=', $tag)->exists()){
+					$existingTag = DB::table('tags')
+						->where('tag_name', '=', $tag)
+						->get();
+
+					DB::table('tags')
+						->where('tag_name', '=', $tag)
+						->increment('times_used');
+
+					$existingTag = json_decode(json_encode($existingTag[0]), true);
+
+					$postTag = new \App\PostTag;
+
+					$postTag->post_id = $target;
+					$postTag->tag_id = $existingTag['man_id'];
+
+					$postTag->save();
+				}
+				else{
+					$newTag = new \App\Tag;
+
+					$newTag->tag_name = $tag;
+					$newTag->man_id = $tagId = uniqid();
+
+					$newTag->save();
+
+					$postTag = new \App\PostTag;
+
+					$postTag->post_id = $target;
+					$postTag->tag_id = $tagId;
+
+					$postTag->save();
+				}
+			}
+
+			/*$url = 'http://gateway-a.watsonplatform.net/calls/text/TextGetRankedConcepts?';
 			$apiKey = 'e5448b915d9a6ceea36018b4afb17c00ff905552';
 
 			$url = $url .'apikey='.$apiKey;
@@ -123,10 +162,9 @@ class PostController extends Controller
 			$resp = (array) json_decode(curl_exec($curl));
 
 			// Close request to clear up some resources
-			curl_close($curl);
+			curl_close($curl);*/
 			
-			return View::make('/test-watson-view')
-				->with('resp', $resp);
+			return Redirect::to('/home');
 		}
 		else
 		{

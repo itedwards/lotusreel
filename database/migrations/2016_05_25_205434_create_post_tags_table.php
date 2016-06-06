@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTagsTable extends Migration
+class CreatePostTagsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,16 @@ class CreateTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tags', function(Blueprint $table){
+        Schema::create('post_tags', function(Blueprint $table){
+           
             $table->increments('id');
             $table->timestamps();
+            $table->string('post_id');
+            $table->string('tag_id');
 
-            $table->string('tag_name');
-            $table->integer('times_used');
+
+            $table->foreign('post_id')->references('man_id')->on('posts');
+            $table->foreign('tag_id')->references('man_id')->on('tags');
         });
     }
 
@@ -28,6 +32,6 @@ class CreateTagsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('tags');
+        Schema::drop('post_tags');
     }
 }

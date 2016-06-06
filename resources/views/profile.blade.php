@@ -124,48 +124,54 @@
                   <h1><? echo $user['firstname']; echo " ".$user['lastname']; ?></h1>
                   <h3><? echo $user['bio']; ?></h3>
                   <hr class="intro-divider">
-                  <?
-                    if($user['id'] != Auth::id()){
-                      $isFollowing = false;
-                      $currFollows = unserialize($currUser['following']);
-                      for($i = 0; $i < sizeof($currFollows); $i++){
-                        if($currFollows[$i] == $user['id']){
-                          $isFollowing = true;
-                        }
-                      }
-
-                      if($isFollowing == false){
-                  ?>
-                        <form action="/<? echo $user['url_id']?>" method="post">
-                          <button type="submit" class="btn btn-primary-outline">
-                            <span class="icon icon-add-user"></span> Follow
-                          </button>
-                        </form>
-                  <?
-                      }
-                      else{
-                  ?>
-                        <form action="/<? echo $user['url_id']?>" method="post">
-                          <button type="submit" class="btn btn-primary">
-                            <span class="icon icon-add-user"></span> Following!
-                          </button>
-                        </form>
-                  <?
-                      }
-                    }
-                  ?>
               </div>
           </div>
       </div>
   </div>
 </div>
 
-<paper-tabs selected="0">
-  <paper-tab>My Portfolio</paper-tab>
-  <paper-tab>My Information</paper-tab>
-  <paper-tab>Shared</paper-tab>
-</paper-tabs>
+<div style="width:70%; display:inline-block; border-style: solid; border-width: 2px;">
+  <paper-tabs selected="0">
+    <paper-tab>My Portfolio</paper-tab>
+    <paper-tab>My Information</paper-tab>
+    <paper-tab>Shared</paper-tab>
+  </paper-tabs>
+</div>
 
+<?
+  if($user['id'] != Auth::id()){ ?>
+    <div style="width:30%; display:inline-block; float:right; padding:5px; border-style: solid; border-width: 2px;">
+  <?
+      $isFollowing = false;
+      $currFollows = unserialize($currUser['following']);
+      for($i = 0; $i < sizeof($currFollows); $i++){
+        if($currFollows[$i] == $user['id']){
+          $isFollowing = true;
+        }
+      }
+
+      if($isFollowing == false){
+  ?>
+        <form action="/<? echo $user['url_id']?>" method="post">
+          <button type="submit" class="btn btn-primary-outline" style="float:right; padding: 5px;">
+            <span class="icon icon-add-user"></span> Follow
+          </button>
+        </form>
+  <?
+      }
+      else{
+  ?>
+        <form action="/<? echo $user['url_id']?>" method="post">
+          <button type="submit" class="btn btn-primary" style="float:right; padding: 5px;">
+            <span class="icon icon-add-user"></span> Following!
+          </button>
+        </form>
+  <?
+      }
+    }
+  ?>
+</div>
+<hr>
 <iron-pages selected="0">
   
   <div class="tab-content" id="grid">

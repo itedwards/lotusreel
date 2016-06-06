@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddCategoryAndTagsFieldsToPostsTable extends Migration
+class AddManIdFieldToPostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddCategoryAndTagsFieldsToPostsTable extends Migration
     {
         Schema::table('posts', function(Blueprint $table){
 
-            $table->string('category');
+            $table->string('man_id')->unique();
 
         });
     }
@@ -26,9 +26,10 @@ class AddCategoryAndTagsFieldsToPostsTable extends Migration
      */
     public function down()
     {
+        
         Schema::table('posts', function(Blueprint $table){
 
-            $table->dropColumn('category');
+            $table->dropColumn('man_id');
         
         });
     }
