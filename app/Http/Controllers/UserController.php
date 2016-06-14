@@ -179,26 +179,35 @@ class UserController extends Controller
 	}*/
 
 	public function addFollower($url_id){
+
 		$user = Auth::user();
-		if ($user['followed'] == "") {
-			$following = [];
-		}
-		else{
-			$following = unserialize($user['followed']);
-		}
+
+		$followedUser = DB::table('users')->where('url_id', $url_id)->get();
+		$followedUser = json_decode(json_encode($followedUser[0]), true);
+	
+		$follow = new \App\Follow;
+
+		$follow->user_followed = $followedUser['id'];
+		$follow->user_following = $user['id'];
+
+		$follow->save();
+
+		return Redirect::to("/{$followedUser['url_id']}");
+
+	}
+
+	public function unfollow($url_id){
+
+		$user = Auth::user();
 
 		$followedUser = DB::table('users')->where('url_id', $url_id)->get();
 		$followedUser = json_decode(json_encode($followedUser[0]), true);
 
-		array_push($following, $followedUser['id']);
-
-		$following = serialize($following);
-
-		DB::table('users')
-			->where('id', $user['id'])
-			->update(['followed' => $following]);
+		DB::table('follows')
+			->where('user_following', '=', Auth::id())
+			->where('user_followed', '=', $followedUser['id'])
+			->delete();
 
 		return Redirect::to("/{$followedUser['url_id']}");
-
 	}
 }

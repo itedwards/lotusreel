@@ -8,7 +8,8 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.1.*",
         "aws/aws-sdk-php-laravel": "~3.0",
-        "laracasts/utilities": "dev-master"
+        "laracasts/utilities": "dev-master",
+        "doctrine/dbal": "v2.5.4"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

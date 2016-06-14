@@ -5,7 +5,6 @@
 @stop
 
 <?php
-  $currUser = Auth::user();
 
   $cover_photo = $user['cover_photo'];
 
@@ -71,6 +70,12 @@
       max-width: 100%;
       display: block;
     }
+
+    paper-tabs paper-tab.iron-selected {
+      --paper-tabs-selection-bar{
+        width: 50px;
+      }
+    }
   </style>
 
 
@@ -94,7 +99,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
           <li><a href="/"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> My Reel</a></li>
-          <li class="active"><a href="/profile/<? echo $user['url_id']; ?>"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> My Portfolio <span class="sr-only">(current)</span></a></li>
+          <li class="active"><a href="/<? echo $user['url_id']; ?>"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> My Portfolio <span class="sr-only">(current)</span></a></li>
           <li><a href="/explore"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Explore</a></li>
         </ul>
       <form class="navbar-form navbar-left" role="search">
@@ -130,7 +135,7 @@
   </div>
 </div>
 
-<div style="width:70%; display:inline-block; border-style: solid; border-width: 2px;">
+<div style="width:70%; display:inline-block; border-style: solid; border-width: 0px 0px 2px 0px;">
   <paper-tabs selected="0">
     <paper-tab>My Portfolio</paper-tab>
     <paper-tab>My Information</paper-tab>
@@ -138,21 +143,21 @@
   </paper-tabs>
 </div>
 
-<?
-  if($user['id'] != Auth::id()){ ?>
-    <div style="width:30%; display:inline-block; float:right; padding:5px; border-style: solid; border-width: 2px;">
+<div style="width:30%; height: 50px; display:inline-block; float:right; padding:5px; border-style: solid; border-width: 0px 0px 2px 0px;">
   <?
+    if($user['id'] != Auth::id()){
       $isFollowing = false;
-      $currFollows = unserialize($currUser['following']);
-      for($i = 0; $i < sizeof($currFollows); $i++){
-        if($currFollows[$i] == $user['id']){
-          $isFollowing = true;
-        }
+      if(DB::table('follows')->where('user_following', '=', Auth::id())->where('user_followed', '=', $user['id'])->exists()){
+        $isFollowing = true;
+      }
+      else{
+        var_dump($currUser['id']);
+        var_dump(Auth::id());
       }
 
       if($isFollowing == false){
   ?>
-        <form action="/<? echo $user['url_id']?>" method="post">
+        <form action="/follow/<? echo $user['url_id']?>" method="post">
           <button type="submit" class="btn btn-primary-outline" style="float:right; padding: 5px;">
             <span class="icon icon-add-user"></span> Follow
           </button>
@@ -161,7 +166,7 @@
       }
       else{
   ?>
-        <form action="/<? echo $user['url_id']?>" method="post">
+        <form action="/unfollow/<? echo $user['url_id']?>" method="post">
           <button type="submit" class="btn btn-primary" style="float:right; padding: 5px;">
             <span class="icon icon-add-user"></span> Following!
           </button>
@@ -171,7 +176,6 @@
     }
   ?>
 </div>
-<hr>
 <iron-pages selected="0">
   
   <div class="tab-content" id="grid">

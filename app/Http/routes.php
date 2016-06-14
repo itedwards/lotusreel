@@ -32,7 +32,47 @@ Route::get('/home', 'PostController@getPosts');
 
 Route::post('/home', 'PostController@postInteraction');
 
-Route::get('/profile/{url_id}/{title?}', function($url_id, $title = null){
+Route::get('/upload', function()
+{
+    if(Auth::check())
+    {
+        $collection_query = DB::table('collections')->where('user_id', '=', Auth::id())->get();
+        Return View::make('new_post_form')
+            ->with('collection_query', $collection_query);
+    }
+    else
+    {
+        return Redirect::to('/');
+    }
+});
+
+Route::post('/upload', 'PostController@addPost');
+
+Route::get('/explore', function(){
+
+    return View::make('explore');
+
+});
+
+Route::get('/new-collection-form', function()
+{
+    if(Auth::check())
+    {
+        Return View::make('new_collection_form');
+    }
+    else
+    {
+        return Redirect::to('/');
+    }
+});
+
+Route::post('/new-collection-form', 'CollectionController@addCollection');
+
+Route::post('/follow/{url_id}', 'UserController@addFollower');
+
+Route::post('/unfollow/{url_id}', 'UserController@unfollow');
+
+Route::get('/{url_id}/{title?}', function($url_id, $title = null){
 
     $user_query = DB::table('users')
         ->where('url_id', '=', $url_id)
@@ -65,44 +105,6 @@ Route::get('/profile/{url_id}/{title?}', function($url_id, $title = null){
     }
 
 });
-
-Route::post('/profile/{url_id}', 'UserController@addFollower');
-
-Route::get('/upload', function()
-{
-	if(Auth::check())
-	{
-        $collection_query = DB::table('collections')->where('user_id', '=', Auth::id())->get();
-		Return View::make('new_post_form')
-            ->with('collection_query', $collection_query);
-	}
-	else
-	{
-		return Redirect::to('/');
-	}
-});
-
-Route::post('/upload', 'PostController@addPost');
-
-Route::get('/explore', function(){
-
-    return View::make('explore');
-
-});
-
-Route::get('/new-collection-form', function()
-{
-	if(Auth::check())
-	{
-		Return View::make('new_collection_form');
-	}
-	else
-	{
-		return Redirect::to('/');
-	}
-});
-
-Route::post('/new-collection-form', 'CollectionController@addCollection');
 
 Route::get('/debug', function() {
 

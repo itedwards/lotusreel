@@ -28,7 +28,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
           <li><a href="/"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> My Reel</a></li>
-          <li><a href="/profile/<? echo $user['url_id']; ?>"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> My Portfolio</a></li>
+          <li><a href="/<? echo $user['url_id']; ?>"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> My Portfolio</a></li>
           <li class="active"><a href="/explore"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Explore <span class="sr-only">(current)</span></a></li>
         </ul>
       <form class="navbar-form navbar-left" role="search">
